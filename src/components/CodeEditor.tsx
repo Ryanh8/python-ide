@@ -1,44 +1,62 @@
 import React, { useState } from 'react';
 import Editor from '@monaco-editor/react';
 import Console from './Console';
-import Terminal from './Terminal';
 
 const CodeEditor: React.FC = () => {
   const [code, setCode] = useState<string>('');
   const [result, setResult] = useState<string>('');
-  const [terminalInput, setTerminalInput] = useState<string>('');
 
   const handleTestCode = async () => {
-    const response = await fetch('/api/execute', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ code }),
-    });
-    const data = await response.json();
-    setResult(data.result);
-  };
+    try {
+      const response = await fetch('http://localhost:8000/executecodetest', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ code }),
+      });
 
-  const handleSubmit = async () => {
-    const response = await fetch('/api/submit', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ code }),
-    });
-    const data = await response.json();
-    if (data.success) {
-      setResult('Code submitted successfully');
+      if (!response.ok) {
+        const errorData = await response.json();
+        setResult(`Error: ${errorData.detail}`);
+      } else {
+        const data = await response.json();
+        setResult(data.result);
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        setResult(`Error: ${error.message}`);
+      } else {
+        setResult('An unknown error occurred');
+      }
     }
   };
 
-  const handleExecute = async () => {
-    // Execute terminal input code
-    const response = await fetch('/api/execute', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ code: terminalInput }),
-    });
-    const data = await response.json();
-    setResult(data.result);
+  const handleSubmitCode = async () => {
+    try {
+      const response = await fetch('http://localhost:8000/executeandstorecode', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ code }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        setResult(`Error: ${errorData.detail}`);
+      } else {
+        const data = await response.json();
+        setResult(`Stored with ID: ${data.id}\nResult: ${data.result}`);
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        setResult(`Error: ${error.message}`);
+      } else {
+        setResult('An unknown error occurred');
+      }
+    }
+  };
+
+  const handleClearCode = () => {
+    setCode('');
+    setResult('');
   };
 
   return (
@@ -60,18 +78,19 @@ const CodeEditor: React.FC = () => {
           </button>
           <button
             className="bg-green-500 text-white px-4 py-2 rounded"
-            onClick={handleSubmit}
+            onClick={handleSubmitCode}
           >
-            Submit
+            Submit Code
+          </button>
+          <button
+            className="bg-red-500 text-white px-4 py-2 rounded"
+            onClick={handleClearCode}
+          >
+            Clear Code
           </button>
         </div>
       </div>
       <Console output={result} />
-      <Terminal
-        input={terminalInput}
-        onInputChange={setTerminalInput}
-        onExecute={handleExecute}
-      />
     </div>
   );
 };
