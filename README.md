@@ -2,7 +2,7 @@
 
 I was tasked with developing a Python IDE which can run unverified python code. Thus creating a
 trusted execution environment using Docker was the safest way to implement. A docker image is created everytime a user executes code, and upon running the code, it will either timeout, run valid code, or return an error and then the docker image will be dropped. I used Postgres to store
-code when the user clicks submit, only when the code is valid.
+code when the user clicks submit, only when the code is valid. Thus , users cannot access sensitive data or if malicious code is submitted to break the system, the Docker image will timeout.
 
 ## How to run
 
