@@ -92,7 +92,7 @@ const CodeEditor: React.FC = () => {
             {submissions.map(submission => (
               <li key={submission.id} className="mb-2">
                 <button
-                  className="w-full text-left p-2 bg-blue-100 hover:bg-blue-200 rounded"
+                  className="w-full text-left p-2 bg-blue-100 hover:bg-blue-200 rounded text-black"
                   onClick={() => handleSubmissionClick(submission)}
                 >
                   Submission ID: {submission.id}
