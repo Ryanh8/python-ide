@@ -1,30 +1,30 @@
-# React + TypeScript + Vite
+# Project Description
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+I was tasked with developing a Python IDE which can run unverified python code. Thus creating a
+trusted execution environment using Docker was the safest way to implement. A docker image is created everytime a user executes code, and upon running the code, it will either timeout, run valid code, or return an error and then the docker image will be dropped. I used Postgres to store
+code when the user clicks submit, only when the code is valid.
 
-Currently, two official plugins are available:
+## How to run
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- Clone the repository
+- Run npm install
+- Run npm run dev
+- Open VSCode and nagivate to backend.
 
-## Expanding the ESLint configuration
+# spin up a postgres db
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+- change the URI in the main.py file to your postgres db
 
-- Configure the top-level `parserOptions` property like this:
+# setup virtual environment
 
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
-```
+python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+# build docker image
+
+docker build -t python-sandbox .
+
+# run fast api app
+
+./run.sh

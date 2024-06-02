@@ -43,7 +43,7 @@ const CodeEditor: React.FC = () => {
         setResult(`Error: ${errorData.detail}`);
       } else {
         const data = await response.json();
-        setResult(`Stored with ID: ${data.id}\nResult: ${data.result}`);
+        setResult(`Code submitted successfully.\nStored with ID: ${data.id}\nResult: ${data.result}`);
       }
     } catch (error) {
       if (error instanceof Error) {
