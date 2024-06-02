@@ -151,6 +151,14 @@ async def check_code(code_id: int):
     }
 
 
+@app.get("/submissions")
+async def get_submissions():
+    db = SessionLocal()
+    submissions = db.query(CodeExecution).all()
+    db.close()
+    return submissions
+
+
 @app.post("/executecodetest")
 async def run_code(request: Request):
     # Hardcoded user code
